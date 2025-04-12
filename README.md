@@ -1,1 +1,1 @@
-# nats-provider
+# natsprovider

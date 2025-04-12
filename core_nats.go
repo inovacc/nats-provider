@@ -2,6 +2,7 @@ package natsprovider
 
 import (
 	"context"
+	"github.com/inovacc/natsprovider/utils"
 	"github.com/nats-io/nats.go"
 	"time"
 )
@@ -24,7 +25,7 @@ func (c *coreProvider) Subscribe(subject string, handler MsgHandler) (Unsubscrib
 			Subject: m.Subject,
 			Reply:   m.Reply,
 			Data:    m.Data,
-			Headers: headerMap(m.Header),
+			Headers: utils.HeaderMap(m.Header),
 		})
 	})
 	if err != nil {
@@ -33,13 +34,13 @@ func (c *coreProvider) Subscribe(subject string, handler MsgHandler) (Unsubscrib
 	return sub, nil
 }
 
-func (c *coreProvider) QueueSubscribe(subject, queue string, handler provider.MsgHandler) (Unsubscriber, error) {
+func (c *coreProvider) QueueSubscribe(subject, queue string, handler MsgHandler) (Unsubscriber, error) {
 	sub, err := c.nc.QueueSubscribe(subject, queue, func(m *nats.Msg) {
 		handler(&Message{
 			Subject: m.Subject,
 			Reply:   m.Reply,
 			Data:    m.Data,
-			Headers: headerMap(m.Header),
+			Headers: utils.HeaderMap(m.Header),
 		})
 	})
 	if err != nil {
@@ -59,6 +60,6 @@ func (c *coreProvider) Request(subject string, msg []byte, timeoutMs int) (*Mess
 		Subject: resp.Subject,
 		Reply:   resp.Reply,
 		Data:    resp.Data,
-		Headers: headerMap(resp.Header),
+		Headers: utils.HeaderMap(resp.Header),
 	}, nil
 }

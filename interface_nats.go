@@ -67,4 +67,14 @@ type (
 	Unsubscriber interface {
 		Unsubscribe() error
 	}
+
+	FileProvider interface {
+		GetFile(name string) ([]byte, error)
+		PutFile(name string, data []byte) error
+		DeleteFile(name string) error
+		ListFiles() ([]string, error)
+		WatchFile(name string, cb func(string, []byte)) error
+		UnwatchFile(name string) error
+		Close() error
+	}
 )
