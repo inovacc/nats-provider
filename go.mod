@@ -3,6 +3,7 @@ module github.com/inovacc/natsprovider
 go 1.24
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/nats-io/nats.go v1.41.0
 	github.com/pkg/sftp v1.13.9
 )
