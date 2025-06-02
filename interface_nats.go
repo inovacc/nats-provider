@@ -1,5 +1,7 @@
 package natsprovider
 
+import "github.com/nats-io/nats.go"
+
 type (
 	Provider interface {
 		GetName() string
@@ -48,7 +50,7 @@ type (
 	}
 
 	ObjectStoreProvider interface {
-		PutObject(name string, data []byte) error
+		PutObject(name string, data []byte) (*nats.ObjectInfo, error)
 		GetObject(name string) ([]byte, error)
 		DeleteObject(name string) error
 		ListObjects() ([]string, error)

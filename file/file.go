@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/nats-io/nats.go"
 	"io"
 	"log"
+
+	"github.com/nats-io/nats.go"
 )
 
 type JetFile struct {
@@ -62,8 +63,8 @@ func (f *JetFile) Read(p []byte) (int, error) {
 }
 
 func (f *JetFile) Close() error {
-	//f.conn.Drain()
-	//f.conn.Close()
+	// f.conn.Drain()
+	// f.conn.Close()
 	return nil
 }
 

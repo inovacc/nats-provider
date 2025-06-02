@@ -2,7 +2,7 @@ package natsprovider
 
 import "github.com/nats-io/nats.go"
 
-func NewNATSProviderWithAuth(url, username, password, kvStoreName, objStoreName, streamName string) (*NATSProvider, error) {
+func NewNATSProviderWithAuth(url, username, password, kvStoreName, objStoreName, streamName string) (Provider, error) {
 	nc, err := nats.Connect(url, nats.UserInfo(username, password))
 	if err != nil {
 		return nil, err

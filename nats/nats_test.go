@@ -2,12 +2,14 @@ package nats
 
 import (
 	"context"
-	"github.com/google/uuid"
-	"github.com/nats-io/nats.go"
 	"log"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/nats-io/nats-server/v2/server"
+	"github.com/nats-io/nats.go"
 )
 
 var testObj testStruct
@@ -21,7 +23,22 @@ func TestMain(m *testing.M) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	nc, err := nats.Connect(nats.DefaultURL)
+	ns, err := server.NewServer(&server.Options{
+		JetStream: true,
+		Debug:     true,
+		Trace:     true,
+	})
+	if err != nil {
+		log.Fatalf("Error creating nats server: %v", err)
+	}
+
+	go ns.Start()
+
+	if !ns.ReadyForConnections(4 * time.Second) {
+		log.Fatalf("Error starting nats server: %v", err)
+	}
+
+	nc, err := nats.Connect(ns.ClientURL())
 	if err != nil {
 		log.Fatalf("Error connecting to nats server: %v", err)
 	}

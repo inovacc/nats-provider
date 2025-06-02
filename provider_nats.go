@@ -15,7 +15,7 @@ type NATSProvider struct {
 	config      ConfigProvider
 }
 
-func NewNATSProvider(url string) (*NATSProvider, error) {
+func NewNATSProvider(url string) (Provider, error) {
 	nc, err := nats.Connect(url)
 	if err != nil {
 		return nil, err

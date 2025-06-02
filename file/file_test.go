@@ -2,13 +2,31 @@ package file
 
 import (
 	"errors"
-	"github.com/nats-io/nats.go"
 	"log"
 	"testing"
+	"time"
+
+	"github.com/nats-io/nats-server/v2/server"
+	"github.com/nats-io/nats.go"
 )
 
 func TestMain(m *testing.M) {
-	nc, err := nats.Connect(nats.DefaultURL)
+	ns, err := server.NewServer(&server.Options{
+		JetStream: true,
+		Debug:     true,
+		Trace:     true,
+	})
+	if err != nil {
+		log.Fatalf("Error creating nats server: %v", err)
+	}
+
+	go ns.Start()
+
+	if !ns.ReadyForConnections(4 * time.Second) {
+		log.Fatalf("Error starting nats server: %v", err)
+	}
+
+	nc, err := nats.Connect(ns.ClientURL())
 	if err != nil {
 		log.Fatal(err)
 	}

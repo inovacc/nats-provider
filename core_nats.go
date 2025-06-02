@@ -2,9 +2,10 @@ package natsprovider
 
 import (
 	"context"
-	"github.com/inovacc/natsprovider/utils"
-	"github.com/nats-io/nats.go"
 	"time"
+
+	"github.com/inovacc/nats-provider/utils"
+	"github.com/nats-io/nats.go"
 )
 
 type coreProvider struct {

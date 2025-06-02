@@ -1,7 +1,7 @@
 package natsprovider
 
 import (
-	"github.com/inovacc/natsprovider/utils"
+	"github.com/inovacc/nats-provider/utils"
 
 	"github.com/nats-io/nats.go"
 )

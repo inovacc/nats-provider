@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"log"
 
 	"github.com/nats-io/nats.go"
 )
@@ -29,7 +30,7 @@ func NewObjectStoreProvider(js nats.JetStreamContext, storeName string) (ObjectS
 	}, nil
 }
 
-func (o *objectStoreProvider) PutObject(name string, data []byte) error {
+func (o *objectStoreProvider) PutObject(name string, data []byte) (*nats.ObjectInfo, error) {
 	return o.store.Put(&nats.ObjectMeta{Name: name}, bytes.NewReader(data))
 }
 
@@ -38,7 +39,11 @@ func (o *objectStoreProvider) GetObject(name string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer reader.Close()
+	defer func(reader nats.ObjectResult) {
+		if err := reader.Close(); err != nil {
+			log.Printf("Error closing object reader: %v", err)
+		}
+	}(reader)
 	return io.ReadAll(reader)
 }
 
@@ -48,10 +53,13 @@ func (o *objectStoreProvider) DeleteObject(name string) error {
 
 func (o *objectStoreProvider) ListObjects() ([]string, error) {
 	var names []string
-	objects := o.store.List()
-	for obj := range objects {
-		if obj != nil {
-			names = append(names, obj.Name)
+	objects, err := o.store.List()
+	if err != nil {
+		return nil, err
+	}
+	for idx := range objects {
+		if objects[idx] != nil {
+			names = append(names, objects[idx].Name)
 		}
 	}
 	return names, nil
